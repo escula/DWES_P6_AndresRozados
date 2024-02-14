@@ -4,6 +4,7 @@ namespace Model;
 
 class Usuario
 {
+    include_once ('use ../');
     private $id_usuario;
     private $password;
 
@@ -52,8 +53,7 @@ class Usuario
     function obtenerUsuarios(){
 
     }
-    function obtenerUsuario(string $id){
-
+    static function obtenerUsuario(string $id){
     }
     function guardarUsuario(string $id){
 
