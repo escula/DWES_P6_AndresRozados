@@ -1,10 +1,10 @@
 <?php
 
 namespace Model;
+include_once ('use ../');
 
 class Usuario
 {
-    include_once ('use ../');
     private $id_usuario;
     private $password;
 
