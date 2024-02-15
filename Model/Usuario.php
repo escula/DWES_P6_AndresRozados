@@ -1,10 +1,9 @@
 <?php
 
-namespace Model;
+include_once '../BBDD.php';
 
 class Usuario
 {
-    include_once ('use ../');
     private $id_usuario;
     private $password;
 
@@ -53,9 +52,34 @@ class Usuario
     function obtenerUsuarios(){
 
     }
-    static function obtenerUsuario(string $id){
+    static function obtenerUsuario(string $idUsuario) :Usuario|bool {
+        $bd = new BBDD();
+        $conexion=$bd->getConexion();
+        $pr=$conexion->prepare("SELECT * FROM usuarios WHERE id_usuario = :idUsuario;");
+        $pr->bindParam(':idUsuario',$idUsuario);
+
+        $pr->execute();
+        $usuario=$pr->fetch(PDO::FETCH_ASSOC);
+
+        if($usuario){
+            return new Usuario($usuario['id_usuario'],$usuario['password']);
+
+        }else{
+            return false;
+        }
     }
-    function guardarUsuario(string $id){
+    function guardarUsuario(): bool{
+        $passwordHash=password_hash($this->getPassword(),PASSWORD_ARGON2ID);
+        $idUsuario=$this->getIdUsuario();
+
+        $bd = new BBDD();
+        $conexion=$bd->getConexion();
+        $pr=$conexion->prepare("INSERT INTO usuarios VALUES (:idUsuario,:password)");
+        $pr->bindParam(':idUsuario',$idUsuario);
+        $pr->bindParam(':password',$passwordHash);
+
+        return $pr->execute();
+
 
     }
     function modificarUsuario(string $id){

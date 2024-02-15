@@ -66,14 +66,14 @@
 <body>
 <div class="login-container">
     <h2>Iniciar Sesión</h2>
-    <form action="../controller/login.php" method="GET">
+    <form action="../controller/loginController.php" method="GET" >
         <div class="form-group">
             <label for="username">Nombre de usuario:</label>
-            <input type="text" id="username" name="username" required>
+            <input type="text" id="username" name="username" required pattern="[a-zA-Z0-9]{1,9}">
         </div>
         <div class="form-group">
             <label for="password">Contraseña:</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password" required pattern="[a-zA-Z0-9]{4,255}">
         </div>
         <div class="form-group">
             <button type="submit">Iniciar Sesión</button>
