@@ -49,8 +49,31 @@ class Usuario
         $this->password = $password;
     }
 
-    function obtenerUsuarios(){
+    static function obtenerUsuarios() : array{
+        $bd = new BBDD();
+        $conexion=$bd->getConexion();
+        $pr=$conexion->prepare("SELECT * FROM usuarios");
+        $pr->execute();
 
+        return $pr->fetchAll(PDO::FETCH_ASSOC);
+
+    }
+    static function obtenerUsuariosMenosAdmin() : array{
+        $bd = new BBDD();
+        $conexion=$bd->getConexion();
+        $pr=$conexion->prepare("SELECT * FROM usuarios WHERE id_usuario != 'admin';");
+        $pr->execute();
+
+        return $pr->fetchAll(PDO::FETCH_ASSOC);
+
+    }
+
+    static function borrarUsuario($idUsuarioBorrar){
+        $bd = new BBDD();
+        $conexion=$bd->getConexion();
+        $pr=$conexion->prepare("DELETE FROM usuarios WHERE id_usuario = :idUsuario;");
+        $pr->bindParam(':idUsuario',$idUsuarioBorrar);
+        return $pr->execute();
     }
     static function obtenerUsuario(string $idUsuario) :Usuario|bool {
         $bd = new BBDD();
@@ -68,8 +91,9 @@ class Usuario
             return false;
         }
     }
-    function guardarUsuario(): bool{
-        $passwordHash=password_hash($this->getPassword(),PASSWORD_ARGON2ID);
+    public function guardarUsuario(): bool{
+        try {
+        $passwordHash=$this->getPassword();
         $idUsuario=$this->getIdUsuario();
 
         $bd = new BBDD();
@@ -79,6 +103,9 @@ class Usuario
         $pr->bindParam(':password',$passwordHash);
 
         return $pr->execute();
+        }catch (Exception $error){
+            return false;
+        }
 
 
     }

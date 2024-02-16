@@ -51,11 +51,36 @@ class Vivienda
         }
     }
 
-    static public function obtenerTodosUsuarios(){
+    static public function obtenerTodasViviendas(){
         $bd = new BBDD();
 
         $conexion = $bd->getConexion();
         $pr=$conexion->prepare('SELECT * FROM viviendas');
+        $pr->execute();
+
+        return $pr->fetchAll(PDO::FETCH_ASSOC);
+
+
+    }
+    static public function numeroDeViviendas() : int {
+        $bd = new BBDD();
+
+        $conexion = $bd->getConexion();
+        $pr=$conexion->prepare("SELECT count(id) as 'numero_viviendas' FROM `viviendas`");
+        $pr->execute();
+        
+        $resultado=$pr->fetch(PDO::FETCH_ASSOC);
+
+        return $resultado['numero_viviendas'];
+    }
+    static public function obtenerViviendaPagina($paginaBuscada){
+        $bd = new BBDD();
+
+        $minimo=$paginaBuscada*4;
+        $conexion = $bd->getConexion();
+        $pr=$conexion->prepare('SELECT * FROM viviendas ORDER BY fecha_anuncio DESC LIMIT :minimo, 4;');
+        $pr->bindParam(':minimo', $minimo, PDO::PARAM_INT);
+
         $pr->execute();
 
         return $pr->fetchAll(PDO::FETCH_ASSOC);
@@ -97,8 +122,4 @@ class Vivienda
     }
 
 }
-
-
-print_r(Vivienda::obtenerTodosUsuarios());
-
-$vivienda=new Vivienda(12,"");
+echo Vivienda::numeroDeViviendas();

@@ -1,3 +1,0 @@
-Nombre de la imagen: atocha.JPG
-Ruta de la imagen: /atocha.JPG
-
