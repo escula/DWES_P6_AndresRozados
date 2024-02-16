@@ -83,7 +83,8 @@ if(isset($_SESSION['nombreUsuario']) && $_SESSION['nombreUsuario']==='admin'){
     <main>
     <form action="modificar" method="get" id="formularioParaModificar"></form>
         <table id="tablaPrincipal">
-        <tr id="cabecera">
+        <thead id="cabecera">
+        <tr >
             <th>ID</th>
             <th>Tipo de vivienda</th>
             <th>Zona</th>
@@ -109,18 +110,39 @@ if(isset($_SESSION['nombreUsuario']) && $_SESSION['nombreUsuario']==='admin'){
                 <button class="button">Modificar</button>
                 <button class="button">Borrar</button>
             </td>
-        </tr>
+        </tr> 
+        </thead>
+         <!--
+        <tr>
+            <td>1</td>
+            <td>Casa</td>
+            <td>Centro</td>
+            <td>3</td>
+            <td>120m²</td>
+            <td>€200,000</td>
+            <td>
+                <a href="#">Foto 1</a>,
+                <a href="#">Foto 2</a>,
+                <a href="#">Foto 3</a>
+            </td>
+            <td>
+                <button class="button">Modificar</button>
+                <button class="button">Borrar</button>
+            </td>
+        </tr> -->
         <!-- Añade más filas aquí -->
     </table>
     <script >
-        fetch("obtenerViviendas.php")
+    fetch("../Api/obtenerViviendas.php?numeroPagina=0")
     .then(response => response.json())
     .then(function (data) {
-        const cabeceraTabla=document.getElementById("cabecera");
+//        const cabeceraTabla=document.getElementById("cabecera");
         const numeroDeFilas=data.length
         const tablaPrincipal=document.getElementById("tablaPrincipal");
+        console.log(data);
         
-        for (let i= 0-1;i<numeroDeFilas;i++){ //Recorremos el array al reves para mostrarlos descencientemente
+        for (let i= 0;i<numeroDeFilas;i++){ //Recorremos el array al reves para mostrarlos descencientemente
+            
             const idVivienda=data[i].id
             const tipo=data[i].tipo
             const zona=data[i].zona
@@ -133,7 +155,7 @@ if(isset($_SESSION['nombreUsuario']) && $_SESSION['nombreUsuario']==='admin'){
             const fechaAnuncio=data[i].fecha_anuncio
             
             
-            const fila= document.createElement("tr")
+            const fila = document.createElement("tr")
             fila.innerHTML= "<td>"+idVivienda+"</td>" +
                              "<td>"+tipo+"</td>"+
                              "<td>"+zona+"</td>"+
@@ -141,12 +163,9 @@ if(isset($_SESSION['nombreUsuario']) && $_SESSION['nombreUsuario']==='admin'){
                              "<td>"+ndormitorios+"</td>"+
                              "<td>"+precio+"</td>"+
                              "<td>"+tamano+"</td>"+
-                             "<td>"+extras+"</td>"+
-                             "<td>"+observaciones+"</td>"+
-                             "<td>"+fechaAnuncio+"</td>" +
                              "<td>" +
-                                    "<button class=`button` name=`modificarIdVivienda`value=`idVivienda` form=`formularioParaModificar`>"+Modificar+"</button>" +
-                             "<td>";
+                                    "<button class=`button` name=`modificarIdVivienda` value=`idVivienda` form=`formularioParaModificar`>Modificar</button>" +
+                             "</td>";
             
             tablaPrincipal.append(fila);
             const buttonBorrar=document.createElement("button");
@@ -157,12 +176,14 @@ if(isset($_SESSION['nombreUsuario']) && $_SESSION['nombreUsuario']==='admin'){
                 console.log(event.parentNode.parentNode);
             }
             
-            
             const ultimoBotonModificar=document.querySelector(".modificarIdVivienda:last-of-type");
-            ultimoBotonModificar.after(buttonBorrar)
+            console.log(ultimoBotonModificar)
+//            ultimoBotonModificar.after(buttonBorrar)
         }
     })
-    .catch(error => console.error("Error:", error));
+//    .catch(error => {
+//        console.log(error)
+//    });
     </script>
     </main>
     </body>
@@ -213,9 +234,3 @@ if(isset($_SESSION['nombreUsuario']) && $_SESSION['nombreUsuario']==='admin'){
 </html>
     ';
 }
-
-
-
-
-
-

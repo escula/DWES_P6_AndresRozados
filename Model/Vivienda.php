@@ -122,4 +122,3 @@ class Vivienda
     }
 
 }
-echo Vivienda::numeroDeViviendas();

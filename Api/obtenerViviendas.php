@@ -1,7 +1,7 @@
 <?php
 include_once ('../Model/Vivienda.php');
 if(isset($_GET['numeroPagina'])){
-//    header('Content-Type: application/json');
+    header('Content-Type: application/json');
     $viviendadePagina =Vivienda::obtenerViviendaPagina($_GET['numeroPagina']);
 //    echo '<pre>';
 //    print_r($viviendadePagina);
@@ -9,7 +9,7 @@ if(isset($_GET['numeroPagina'])){
 }
 
 
-if(isset($_POST['numeroDeViviendas'])){
+if(isset($_get['numeroDeViviendas'])){
     header('Content-Type: application/json');
 
     $numeroViviendas=Vivienda::numeroDeViviendas();
