@@ -6,7 +6,6 @@ if(session_status()===PHP_SESSION_DISABLED){
     session_start();
 }
 if(!isset($_SESSION['nombreUsuario'])){ // si no existe la session
-    echo 'hola';
 
     if(isset($_GET['username'])){
         include_once ('../Model/Usuario.php');

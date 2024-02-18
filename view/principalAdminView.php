@@ -81,7 +81,7 @@ if(isset($_SESSION['nombreUsuario']) && $_SESSION['nombreUsuario']==='admin'){
         </form>
     </header>
     <main>
-    <form action="modificar" method="get" id="formularioParaModificar"></form>
+    <form action="actualizarViviendaView.php" method="get" id="formularioParaActualizar"></form>
         <table id="tablaPrincipal">
         <thead id="cabecera">
         <tr >
@@ -94,23 +94,6 @@ if(isset($_SESSION['nombreUsuario']) && $_SESSION['nombreUsuario']==='admin'){
             <th>Fotos</th>
             <th>Acciones</th>
         </tr>
-        <tr>
-            <td>1</td>
-            <td>Casa</td>
-            <td>Centro</td>
-            <td>3</td>
-            <td>120m²</td>
-            <td>€200,000</td>
-            <td>
-                <a href="#">Foto 1</a>,
-                <a href="#">Foto 2</a>,
-                <a href="#">Foto 3</a>
-            </td>
-            <td>
-                <button class="button">Modificar</button>
-                <button class="button">Borrar</button>
-            </td>
-        </tr> 
         </thead>
          <!--
         <tr>
@@ -132,62 +115,134 @@ if(isset($_SESSION['nombreUsuario']) && $_SESSION['nombreUsuario']==='admin'){
         </tr> -->
         <!-- Añade más filas aquí -->
     </table>
-    <script >
-    fetch("../Api/obtenerViviendas.php?numeroPagina=0")
-    .then(response => response.json())
-    .then(function (data) {
-//        const cabeceraTabla=document.getElementById("cabecera");
-        const numeroDeFilas=data.length
-        const tablaPrincipal=document.getElementById("tablaPrincipal");
-        console.log(data);
-        
-        for (let i= 0;i<numeroDeFilas;i++){ //Recorremos el array al reves para mostrarlos descencientemente
-            
-            const idVivienda=data[i].id
-            const tipo=data[i].tipo
-            const zona=data[i].zona
-            const direccion=data[i].direccion
-            const ndormitorios=data[i].ndormitorios
-            const precio=data[i].precio
-            const tamano=data[i].tamano
-            const extras=data[i].extras
-            const observaciones=data[i].observaciones
-            const fechaAnuncio=data[i].fecha_anuncio
-            
-            
-            const fila = document.createElement("tr")
-            fila.innerHTML= "<td>"+idVivienda+"</td>" +
-                             "<td>"+tipo+"</td>"+
-                             "<td>"+zona+"</td>"+
-                             "<td>"+direccion+"</td>"+
-                             "<td>"+ndormitorios+"</td>"+
-                             "<td>"+precio+"</td>"+
-                             "<td>"+tamano+"</td>"+
-                             "<td>" +
-                                    "<button class=`button` name=`modificarIdVivienda` value=`idVivienda` form=`formularioParaModificar`>Modificar</button>" +
-                             "</td>";
-            
-            tablaPrincipal.append(fila);
-            const buttonBorrar=document.createElement("button");
-            
-            buttonBorrar.addEventListener("click",borrarFila)
-                             
-            function borrarFila(event){
-                console.log(event.parentNode.parentNode);
-            }
-            
-            const ultimoBotonModificar=document.querySelector(".modificarIdVivienda:last-of-type");
-            console.log(ultimoBotonModificar)
-//            ultimoBotonModificar.after(buttonBorrar)
-        }
-    })
-//    .catch(error => {
-//        console.log(error)
-//    });
-    </script>
+    <div id="numerosPaginacion">
+    
+    </div>
+    <form action="insertarViviendaView.php" method="get">
+        <button type="submit">Insertar vivienda</button>
+    </form>
     </main>
     </body>
-    </html>';
+    </html>
+    <script >
+    obtenerPagina(0);
+//    obtenerPaginacion()
+    function obtenerPagina(numero){
+        fetch("../Api/obtenerPaginasViviendas.php?numeroPagina="+numero)
+        .then(response => response.json())
+        .then(function (data) {
+            
+            const numeroDeFilas=data.viviendas.length
+            const tablaPrincipal=document.getElementById("tablaPrincipal");
+           
+          
+            
+            for (let i= 0;i<numeroDeFilas;i++){ //Recorremos el array al reves para mostrarlos descencientemente
+                
+                const idVivienda=data.viviendas[i].id
+                const tipo=data.viviendas[i].tipo
+                const zona=data.viviendas[i].zona
+                const direccion=data.viviendas[i].direccion
+                const ndormitorios=data.viviendas[i].ndormitorios
+                const precio=data.viviendas[i].precio
+                const tamano=data.viviendas[i].tamano
+                const extras=data.viviendas[i].extras
+                const observaciones=data.viviendas[i].observaciones
+                const fechaAnuncio=data.viviendas[i].fecha_anuncio
+
+
+                //recuperando las fotos y haciendo los anchor de la fila
+                let fotosPorVivienda="";
+                for (var x of data.fotosViviendas ) {
+                  
+                    
+                    if(x.length !=0 && x[0].id_vivienda == parseInt(idVivienda)){
+ 
+                        for (var foto of x) {
+                           fotosPorVivienda=fotosPorVivienda+"<a href=../img/"+foto.foto+">imagen: "+foto.foto+"</a></br>"
+
+                        }
+                    }
+
+                  
+                }
+                
+                const fila = document.createElement("tr")
+                fila.innerHTML= "<td class=idVivienda>"+idVivienda+"</td>" +
+                                 "<td>"+tipo+"</td>"+
+                                 "<td>"+zona+"</td>"+
+                                 "<td>"+ndormitorios+"</td>"+
+                                 "<td>"+tamano+"</td>"+
+                                 "<td>"+precio+"€</td>"+
+                                "<td>"+fotosPorVivienda+"</td>"+
+                                 "<td>" +
+                                        "<button class=button name=modificarIdVivienda value="+idVivienda+" form=formularioParaActualizar>Modificar</button>" +
+                                         "<button class=button name=borrarIdVivienda value=idVivienda>Borrar</button>" +
+                                 "</td>";
+                
+                tablaPrincipal.append(fila);
+                
+                const botones =document.querySelectorAll("button[name=borrarIdVivienda]")     
+                botones[botones.length-1].addEventListener("click",borrarFila)   
+                
+                function borrarFila(){
+                   eliminarVivienda(idVivienda);
+                   obtenerPaginacion();
+                   eliminacionCuerpoTabla()
+                   setTimeout(obtenerPagina(0),200)
+                   
+                    
+                }
+    
+            }
+        })  
+//        .catch(error => {
+//            console.log(error)
+//        });
+    } 
+    function obtenerPaginacion(){
+        fetch("../Api/obtenerNumeroViviendas.php")
+        .then(response => response.json())
+        .then(function (data) {
+            
+            const numeroViviendas=data.numero_viviendas;
+            const numeropaginas=numeroViviendas/4;
+            const viviendasDeUltimaPagina= numeropaginas%4; //Si este es distinto de cero significa que abria que añadir una pagina más
+            
+            const numerosPaginacionDiv=document.getElementById("numerosPaginacion");
+            numerosPaginacionDiv.innerHTML="";
+//            if (viviendasDeUltimaPagina===2){
+//                numeroTotalPaginas = numeropaginas;
+//            }else{
+//                numeroTotalPaginas = numeropaginas + 1;
+//            }
+            numeroTotalPaginas = numeropaginas;
+            for (let i=0;i<numeroTotalPaginas;i++){
+                const numeroPaginacion= document.createElement("button")
+                numeroPaginacion.innerText= i+1;
+      
+                numeroPaginacion.addEventListener("click",function (event){
+                eliminacionCuerpoTabla()
+                obtenerPagina(i)
+                })
+                numerosPaginacionDiv.append(numeroPaginacion);
+                
+            } 
+        })
+    }
+    function eliminacionCuerpoTabla(){
+        const filasElimnar=document.querySelectorAll("tr>td")
+        for(var i = 0; i < filasElimnar.length; i++) {
+          filasElimnar[i].remove()
+        }
+
+    }
+    function eliminarVivienda(idEliminarVivienda){
+        fetch("../Api/borrarVivienda.php?idVivienda="+idEliminarVivienda)
+        .then()
+    }
+    
+    </script>';
 
 
 //---------------Si no tiene antiene la session---------------

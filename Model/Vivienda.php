@@ -22,7 +22,7 @@ class Vivienda
      * @param $ndormitorios
      * @param $precio
      * @param $tamano
-     * @param $extras
+     * @param $extras string con comas
      * @param $observaciones
      */
     public function __construct($tipo, $zona, $direccion, $ndormitorios, $precio, $tamano, $extras, $observaciones)
@@ -62,16 +62,86 @@ class Vivienda
 
 
     }
-    static public function numeroDeViviendas() : int {
+    function ActualizarVivienda($idVivienda){
+        $tipo = $this->tipo;
+        $zona = $this->zona;
+        $direccion = $this->direccion;
+        $ndormitorios = $this->ndormitorios;
+        $precio = $this->precio;
+        $tamano = $this->tamano;
+        $extras = $this->extras;
+        $observaciones = $this->observaciones;
+
+        $bd = new BBDD();
+
+        $conexion = $bd->getConexion();
+
+        $pr=$conexion->prepare("UPDATE `viviendas` SET
+                       `tipo`= :tipo,`zona`= :zona,`direccion`= :direccion,
+                       `ndormitorios`= :ndormitorios,`precio`= :precio,`tamano`= :tamano,
+                       `extras`= :extras,`observaciones`= :observaciones WHERE id= :id");
+
+        $pr->bindParam(':tipo', $tipo, PDO::PARAM_STR);
+        $pr->bindParam(':zona', $zona, PDO::PARAM_STR);
+        $pr->bindParam(':direccion', $direccion, PDO::PARAM_STR);
+        $pr->bindParam(':ndormitorios', $ndormitorios, PDO::PARAM_STR);
+        $pr->bindParam(':precio', $precio, PDO::PARAM_INT);
+        $pr->bindParam(':tamano', $tamano, PDO::PARAM_INT);
+        $pr->bindParam(':extras', $extras, PDO::PARAM_STR);
+        $pr->bindParam(':observaciones', $observaciones, PDO::PARAM_STR);
+        $pr->bindParam(':id', $idVivienda, PDO::PARAM_INT);
+
+        return $pr->execute();
+    }
+    static function obtenerVivienda($idVivienda){
+        $bd = new BBDD();
+
+        $conexion = $bd->getConexion();
+        $pr=$conexion->prepare('SELECT * FROM viviendas WHERE id= :idVivienda ');
+        $pr->bindParam(':idVivienda', $idVivienda, PDO::PARAM_INT);
+        $pr->execute();
+
+        return $pr->fetch(PDO::FETCH_ASSOC);
+
+
+    }
+    static function borrarVivienda($idVivienda){
+        $bd = new BBDD();
+
+        $conexion = $bd->getConexion();
+        $pr=$conexion->prepare('DELETE FROM viviendas WHERE id= :idVivienda');
+        $pr->bindParam(':idVivienda', $idVivienda, PDO::PARAM_INT);
+        $pr->execute();
+
+        return $pr->fetchAll(PDO::FETCH_ASSOC);
+
+
+    }
+    static public function numeroDeViviendas() {
         $bd = new BBDD();
 
         $conexion = $bd->getConexion();
         $pr=$conexion->prepare("SELECT count(id) as 'numero_viviendas' FROM `viviendas`");
         $pr->execute();
         
-        $resultado=$pr->fetch(PDO::FETCH_ASSOC);
+        return $pr->fetch(PDO::FETCH_ASSOC);
 
-        return $resultado['numero_viviendas'];
+
+    }
+
+    public function __toString()
+    {
+        return "Vivienda { id: $this->id, tipo: $this->tipo, zona: $this->zona, direccion: $this->direccion, ndormitorios: $this->ndormitorios, precio: $this->precio, tamano: $this->tamano, extras: $this->extras, observaciones: $this->observaciones, fecha_anuncio: $this->fecha_anuncio }";
+    }
+    static public function obtenerIdMasAlto(){
+        $bd = new BBDD();
+
+        $conexion = $bd->getConexion();
+        $pr=$conexion->prepare(" SELECT MAX(id) as 'id_mas_alto' FROM `viviendas` ");
+
+        $pr->execute();
+
+        return $pr->fetch(PDO::FETCH_ASSOC);
     }
     static public function obtenerViviendaPagina($paginaBuscada){
         $bd = new BBDD();
@@ -88,33 +158,31 @@ class Vivienda
 
     }
 
-    public function guardarVivienda(Vivienda $viviendaInsertar, $imagenes){
-        $tipo = $viviendaInsertar->tipo;
-        $zona = $viviendaInsertar->zona;
-        $direccion = $viviendaInsertar->direccion;
-        $ndormitorios = $viviendaInsertar->ndormitorios;
-        $precio = $viviendaInsertar->precio;
-        $tamano = $viviendaInsertar->tamano;
-        $extras = $viviendaInsertar->extras;
-        $observaciones = $viviendaInsertar->observaciones;
-        $fecha_anuncio = $viviendaInsertar->fecha_anuncio;
-        $precio = $viviendaInsertar->precio;
+    public function guardarVivienda(): bool
+    {
+        $tipo = $this->tipo;
+        $zona = $this->zona;
+        $direccion = $this->direccion;
+        $ndormitorios = $this->ndormitorios;
+        $precio = $this->precio;
+        $tamano = $this->tamano;
+        $extras = $this->extras;
+        $observaciones = $this->observaciones;
 
         $bd = new BBDD();
 
         $conexion = $bd->getConexion();
 
-        $pr=$conexion->prepare("INSERT INTO `viviendas`(`tipo`, `zona`, `direccion`, `ndormitorios`, `precio`, `tamano`, `extras`, `observaciones`, `fecha_anuncio`) VALUES (':tipo',':zona',':direccion',':ndormitorios',':precio',':tamano',':extras','observaciones',':fecha_anuncio')");
+        $pr=$conexion->prepare("INSERT INTO `viviendas`(`tipo`, `zona`, `direccion`, `ndormitorios`, `precio`, `tamano`, `extras`, `observaciones`) VALUES (:tipo,:zona,:direccion,:ndormitorios,:precio,:tamano,:extras,:observaciones)");
 
-        $pr->bindParam(':id', $username, PDO::PARAM_STR);
         $pr->bindParam(':tipo', $tipo, PDO::PARAM_STR);
         $pr->bindParam(':zona', $zona, PDO::PARAM_STR);
         $pr->bindParam(':direccion', $direccion, PDO::PARAM_STR);
         $pr->bindParam(':ndormitorios', $ndormitorios, PDO::PARAM_STR);
-        $pr->bindParam(':precio', $precio, PDO::PARAM_STR);
-        $pr->bindParam(':tamano', $tamano, PDO::PARAM_STR);
+        $pr->bindParam(':precio', $precio, PDO::PARAM_INT);
+        $pr->bindParam(':tamano', $tamano, PDO::PARAM_INT);
+        $pr->bindParam(':extras', $extras, PDO::PARAM_STR);
         $pr->bindParam(':observaciones', $observaciones, PDO::PARAM_STR);
-        $pr->bindParam(':fecha_anuncio', $fecha_anuncio);
 
         return $pr->execute();
 
@@ -122,3 +190,4 @@ class Vivienda
     }
 
 }
+
