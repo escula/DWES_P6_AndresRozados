@@ -58,12 +58,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     ProcesarImagen::guardarImagenesEnFicheros('../img','imagenes');
 
     //decidiendo a que vista redirecciona el controlador
-    session_start();
-    if($_SESSION['nombreUsuario']==='admin'){
-        header('Location: ../view/principalAdminView.php');
+    header('Location: ../view/principal.php');
 
-    }else{
-        header('Location: ../view/principalClienteView.php');
-    }
 }
 ?>

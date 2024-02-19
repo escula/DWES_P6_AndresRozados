@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(isset($_SESSION['nombreUsuario']) && $_SESSION['nombreUsuario']==='admin'){
+if(isset($_SESSION['nombreUsuario'])){
         echo '
     <!DOCTYPE html>
     <html lang="ES">
@@ -65,22 +65,83 @@ if(isset($_SESSION['nombreUsuario']) && $_SESSION['nombreUsuario']==='admin'){
             }
         </style>
     </head>
-    <body>
-    <header class="header">';
-        if(isset($_COOKIE['ultimaSession'])){
-            echo '<p>Ultima conexion:'.$_COOKIE['ultimaSession'].'</p>';
-        }
-        echo '
-        <p>'.$_SESSION['nombreUsuario'].'</p>';
-        echo '
-         <form action="./crearYborrarUsuarioView.php" method="get">
-            <button class="logout-button">Crear un usuario</button>
-        </form>
-        <form action="../controller/logOutController.php" method="get">
-            <button class="logout-button">Desloguearse</button>
-        </form>
-    </header>
+    <body>';
+include_once 'header.php';
+echo'
     <main>
+<form id="usarFiltro" method="post">
+    <label for="tipo_vivienda">Tipo de vivienda:</label>
+     <select id="tipo_vivienda" name="tipo_vivienda" >
+                <option value="">Ninguna</option>
+                <option value="tipo = Piso">Piso</option>
+                <option value="tipo = Adosado">Adosado</option>
+                <option value="tipo = Chalet">Chalet</option>
+                <option value="tipo = Casa">Casa</option>
+                
+    </select>
+    </br>
+    <label for="zona">Zona:</label>
+     <select id="zona" name="zona" >
+                <option value="">Ninguno</option>
+                <option value="zona = Centro">Centro</option>
+                <option value="zona = Norte">Norte</option>
+                <option value="zona = Sur">Sur</option>
+                <option value="zona = Este">Este</option>
+                <option value="zona = Oeste">Oeste</option>
+    </select>
+    </br>
+    <label>Número de dormitorios:</label>
+    <div style="display: flex">
+        <label style="margin: 0" for="1">1</label>
+        <input type="radio" id="1" name="dormitorios" value="ndormitorios = 1" >
+    </div>
+
+    <div style="display: flex">
+        <label style="margin: 0" for="2">2</label>
+        <input type="radio" id="2" name="dormitorios" value="ndormitorios = 2" >
+    </div>
+
+    <div style="display: flex">
+        <label style="margin: 0" for="3">3</label>
+        <input type="radio" id="3" name="dormitorios" value="ndormitorios = 3" >
+    </div>
+
+    <div style="display: flex">
+
+        <label style="margin: 0" for="4">4</label>
+        <input type="radio" id="4" name="dormitorios" value="ndormitorios = 4">
+    </div>
+    <div style="display: flex">
+        <label style="margin: 0" for="5oMas">5 o más</label>
+        <input type="radio" style="width: auto" id="5oMas" name="dormitorios" value="ndormitorios = 5 o más">
+    </div>
+    
+    </br>
+    <label>Precio:</label>
+    <input type="radio" id="100000" name="precio" value="precio < 100000">
+    <label for="100000" ><100,000</label>
+    <input type="radio" id="100000" name="precio" value="precio > 100000 and precio < 200000">
+    <label for="100000" ><100,000</label>
+    <input type="radio" id="100000" name="precio" value="precio > 200000 and precio < 300000">
+    <label for="100000" ><100,000</label>
+    <input type="radio" id="100000" name="precio" value="precio > 300000">
+    <label for="100000" ><100,000</label>
+    
+    </br>
+    <label>Tamaño:</label>
+    <input type="radio" id="100" name="tamano" value="tamano < 100">
+    <label for="100" ><100,</label>
+    <input type="radio" id="100" name="tamano" value="tamano > 100 and tamano < 200">
+    <label for="100" ><100,</label>
+    <input type="radio" id="100" name="tamano" value="tamano > 200 and tamano < 300">
+    <label for="100" ><100,</label>
+    <input type="radio" id="100" name="tamano" value="tamano > 300">
+    <label for="100000" ><100,000</label>
+    </br>
+    
+    <input type="submit" value="Buscar viviendas">
+</form>
+
     <form action="actualizarViviendaView.php" method="get" id="formularioParaActualizar"></form>
         <table id="tablaPrincipal">
         <thead id="cabecera">
@@ -95,25 +156,7 @@ if(isset($_SESSION['nombreUsuario']) && $_SESSION['nombreUsuario']==='admin'){
             <th>Acciones</th>
         </tr>
         </thead>
-         <!--
-        <tr>
-            <td>1</td>
-            <td>Casa</td>
-            <td>Centro</td>
-            <td>3</td>
-            <td>120m²</td>
-            <td>€200,000</td>
-            <td>
-                <a href="#">Foto 1</a>,
-                <a href="#">Foto 2</a>,
-                <a href="#">Foto 3</a>
-            </td>
-            <td>
-                <button class="button">Modificar</button>
-                <button class="button">Borrar</button>
-            </td>
-        </tr> -->
-        <!-- Añade más filas aquí -->
+
     </table>
     <div id="numerosPaginacion">
     
@@ -126,7 +169,7 @@ if(isset($_SESSION['nombreUsuario']) && $_SESSION['nombreUsuario']==='admin'){
     </html>
     <script >
     obtenerPagina(0);
-//    obtenerPaginacion()
+    obtenerPaginacion()
     function obtenerPagina(numero){
         fetch("../Api/obtenerPaginasViviendas.php?numeroPagina="+numero)
         .then(response => response.json())
@@ -242,7 +285,9 @@ if(isset($_SESSION['nombreUsuario']) && $_SESSION['nombreUsuario']==='admin'){
         .then()
     }
     
-    </script>';
+
+    </script>
+    <script src="./filtro.js" async></script>';
 
 
 //---------------Si no tiene antiene la session---------------

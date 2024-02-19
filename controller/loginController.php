@@ -29,12 +29,10 @@ if(!isset($_SESSION['nombreUsuario'])){ // si no existe la session
         }
     }
 
+    header('Location: ../view/principal.php');
 }
 
 // si no se mete a ningun header al final llega aquí o si a salido la verificación correctamente
-if($_SESSION['nombreUsuario']==='admin'){
-    header('Location: ../view/principalAdminView.php');
 
-}else{
-    header('Location: ../view/principalClienteView.php');
-}
+
+

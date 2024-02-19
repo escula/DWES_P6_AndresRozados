@@ -8,6 +8,29 @@ if(isset($_SESSION['nombreUsuario']) && $_SESSION['nombreUsuario']==='admin'){
 <html lang="ES">
 <head>
     <style>
+.header {
+    width: 100%;
+    height: 50px;
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 20px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+.logout-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+}
 body {
   font-family: Arial, sans-serif;
 }
@@ -62,9 +85,13 @@ button {
 button:hover {
     background-color: #004d00;
 }
+
+
     </style>
 </head>
-<body>
+<body>';
+include_once 'header.php';
+echo '
 <form action="../controller/borrarUsuarioController.php" method="get" id="formularioBorrar"></form>
     <table>
         <tr id="cabecera">
@@ -108,7 +135,7 @@ if(isset($_SESSION['contrasenaUsuarioCreado'])){
         .catch(error => console.error("Error:", error));
 </script>
 
-<button onclick="location.href= '../controller/salirDecrearYeliminarUsuario.php'">Volver a pagina principal y piensatelo mejor</button>
+<button onclick="location.href= '../controller/salirDecrearYeliminarUsuario.php'">Volver a pagina principal</button>
 <!--esto es lo mismo que hacer un anchor pero con button-->
 </body>
 </html>

@@ -62,7 +62,7 @@ class Vivienda
 
 
     }
-    function ActualizarVivienda($idVivienda){
+    public function ActualizarVivienda($idVivienda){
         $tipo = $this->tipo;
         $zona = $this->zona;
         $direccion = $this->direccion;
@@ -188,6 +188,19 @@ class Vivienda
 
 
     }
+    static public function obtenerViviendaPaginaConFiltro($sentencia){
+        $bd = new BBDD();
 
+
+        $conexion = $bd->getConexion();
+        $pr=$conexion->prepare($sentencia.' ORDER BY fecha_anuncio');
+
+
+        $pr->execute();
+
+        return $pr->fetchAll(PDO::FETCH_ASSOC);
+
+
+    }
 }
 

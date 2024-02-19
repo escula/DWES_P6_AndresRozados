@@ -1,16 +1,3 @@
-<?php
-    session_start();
-
-    if(isset($_SESSION['nombreUsuario'])){
-        if($_SESSION['nombreUsuario']==='admin'){
-            $vistaParMandar='principalAdminView.php';
-        }else{
-            $vistaParMandar='principalClienteView.php';
-        }
-    }else{
-        header('Location: login.php');
-    }
-?>
 <!DOCTYPE html>
 <html lang="ES">
 <head>
@@ -49,7 +36,7 @@
     <h2>Error</h2>
     <p>Error en la operación</p>
 
-    <button onclick="location.href='<?=$vistaParMandar?>'">Volver a pagina principal y piensatelo mejor</button>
+    <button onclick="location.href='principal.php'">Volver a pagina principal y piensatelo mejor</button>
 </div>
 </body>
 </html>

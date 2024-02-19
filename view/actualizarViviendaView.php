@@ -4,6 +4,29 @@
 <head>
     <title>Insertar vivienda</title>
     <style>
+        .header {
+            width: 100%;
+            height: 50px;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding-right: 20px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        }
+        .logout-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
         body {
             font-family: Arial, sans-serif;
         }
@@ -16,15 +39,18 @@
             margin-top: 10px;
             color: #006400;
         }
-        input, select, textarea {
+        button[class="salir"], input, select, textarea {
             width: 100%;
             padding: 5px;
             margin-top: 2px;
             border: 2px solid #006400;
         }
-        input[type="submit"] {
+        button[class="salir"], input[type="submit"] {
             background-color: #006400;
             color: white;
+        }
+        button[class="salir"], input[type="submit"]:hover{
+            cursor: pointer;
         }
         label[type="radio"]{
             display: inline;
@@ -36,6 +62,10 @@
 </head>
 <body>
 
+<?php
+session_start();
+include_once 'header.php';
+?>
 <form id="actualizarViviendaYFoto" method="POST" enctype="multipart/form-data">
     <label for="tipo_vivienda">Tipo de vivienda:</label>
     <select id="tipo_vivienda" name="tipo_vivienda" required>
@@ -108,6 +138,8 @@
     <textarea id="observaciones" name="observaciones"></textarea>
 
     <input type="submit" value="Enviar">
+    <button type ="button" class="salir" onclick="location.href= '../controller/salirDecrearYeliminarUsuario.php'">Volver a pagina principal</button>
+
 </form>
 <script>
     var urlCompleta = window.location.href; // obtienes la URL de la página actual

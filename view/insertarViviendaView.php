@@ -16,15 +16,19 @@
                 margin-top: 10px;
                 color: #006400;
             }
-            input, select, textarea {
+
+            button[class="salir"], input, select, textarea {
                 width: 100%;
                 padding: 5px;
                 margin-top: 2px;
                 border: 2px solid #006400;
             }
-            input[type="submit"] {
+            button[class="salir"], input[type="submit"] {
                 background-color: #006400;
                 color: white;
+            }
+            button[class="salir"], input[type="submit"]:hover{
+                cursor: pointer;
             }
             label[type="radio"]{
                 display: inline;
@@ -108,6 +112,8 @@
             <textarea id="observaciones" name="observaciones"></textarea>
 
             <input type="submit" value="Enviar">
+        <button type ="button" class="salir" onclick="location.href= '../controller/salirDecrearYeliminarUsuario.php'">Volver a pagina principal</button>
         </form>
+
     </body>
 </html>

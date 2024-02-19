@@ -87,12 +87,7 @@ if(!isset($_SESSION['nombreUsuario'])){ // si no existe la session
     </body>
     </html>';
 }else{
-    // si no se mete a significa que estabas logueado te manda a la pagina principal
-    if($_SESSION['nombreUsuario']==='admin'){
-        header('Location: ../view/principalAdminView.php');
-
-    }else{
-        header('Location: ../view/principalClienteView.php');
-    }
+    
+header('Location: ../view/principal.php');
 
 }
